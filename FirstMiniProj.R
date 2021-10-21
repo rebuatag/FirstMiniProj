@@ -1,8 +1,10 @@
 ## CMSC 197 Introduction to Data Science: First Mini Project
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
+
 ## Before starting I set my working directory to the directory of my data using the following command
 ## setwd("C:/Users/HP/Desktop/4th Year 1st Sem/CMSC197 [Intro to Data Science]/First Mini Project")
 ## Then, I source it to my R code by entering source("FirstMiniProj.R") in the console
+
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
 ## Problem #1
     ## Description :
@@ -44,6 +46,7 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
 }
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
+
 ## Problem #2
     ## Description :
         ## complete      -> reads a directory full of files and reports the number of completely observed cases in each data file
@@ -88,6 +91,7 @@ complete <- function(directory, id = 1:332) {
 }
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
+
 ## Problem #3
     ## Description :
         ## corr         -> calculates the correlation between sulfate and nitrate for monitor locations where the number of 
@@ -140,6 +144,7 @@ corr <- function(directory, threshold = 0) {
 }
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
+
 ## Problem #4
     ## Description :
         ## plot the 30-day mortality rates for heart attack given the dataset outcome-of-care-measures.csv

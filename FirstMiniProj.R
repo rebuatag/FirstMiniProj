@@ -25,24 +25,30 @@
 pollutantmean <- function(directory, pollutant, id = 1:332) {
     
     ## List of csv files to monitor from the directory, specdata
+    ## pattern attribute will only return files names with matching .csv format
+    ## full.names attribute = TRUE will return the full path of the files (directory path + file name)
     files_list <- list.files(path = directory, pattern = ".csv", full.names = TRUE) 
     
-    ## Empty data frame
+    ## Empty data frame for storing later
     datas <- data.frame()
     
     ## Loop through the list of files using the monitor ID specified 
     for (i in id) {
         
         ## read the file of corresponding ID
-        read <- read.csv(files_list[i])
+        read_data <- read.csv(files_list[i])
+        
+        ## Removing data from the file with NA values
+        ## na.omit() returns the object with incomplete cases removed
+        read_data <- na.omit(read_data)
         
         ## row binding of files to the datas data frame
-        datas <- rbind(datas, read)
+        datas <- rbind(datas, read_data)
     }
     
-    ## na.rm = TRUE means we remove NA values
-    ## compute the mean of the pollutant from the data frame datas
-    mean(datas[ , pollutant], na.rm = TRUE)
+    ## mean would compute the mean of the pollutant from the data frame datas
+    ## [[]] would return the column with specified pollutant parameter from the data frame
+    mean(datas[[pollutant]])
 }
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
@@ -72,22 +78,24 @@ complete <- function(directory, id = 1:332) {
     for (i in id) {
         
         ## read the file of corresponding ID
-        file <- read.csv(files_list[i], header = TRUE)
+        read_file <- read.csv(files_list[i], header = TRUE)
         
         ## Delete rows that have incomplete cases
         ## na.omit() returns the object with incomplete cases removed
-        file <- na.omit(file)
+        read_file <- na.omit(read_file)
         
-        ## Count rows with complete cases
-        nobs <- nrow(file)
+        ## Count rows with complete cases and store it in nobs
+        nobs <- nrow(read_file)
         
-        ## Enumerate cases by index i, which is the monitor ID
+        ## Enumerate cases by index i, which is based on the id parameter
         ## Store in complete cases dataframe the cases that are complete
+        ## data.frame creates a data frame with monitor ID and no. of complete cases
+        ## rbind binds the cases row wise
         complete_cases <- rbind(complete_cases, data.frame(i, nobs))
     }
     
     ## return the data frame of complete cases
-    return(complete_cases)
+    complete_cases
 }
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 
@@ -123,24 +131,24 @@ corr <- function(directory, threshold = 0) {
     for(i in 1:length(files_list)){
         
         ## Read the file of corresponding index
-        temp <- read.csv(files_list[i],header=TRUE)
+        read_file <- read.csv(files_list[i], header = TRUE)
         
-        ## Removing NAs
-        ## complete.cases return a logical vector indicating which cases are complete
-        temp <- temp[complete.cases(temp),]
+        ## Removing incomplete cases
+        ## na.omit() returns the object with incomplete cases removed
+        read_file <- na.omit(read_file)
         
-        ## count the complete observation cases (no missing values)
+        ## count the no of rows of complete observation cases
         ## if it is greater than the threshold
-        if(nrow(temp) > threshold){
+        if(nrow(read_file) > threshold){
             
             ## Compute the correlation of the pollutants then store in a vector
-            ## use is an attribute of cor for computing covariances in the presence of missing values. 
-            correlation <- c(correlation,cor(temp$nitrate,temp$sulfate))
+            ## Since read_file is a data frame, we use [[]] to get the pollutants
+            correlation <- c(correlation,cor(read_file[["sulfate"]], read_file[["nitrate"]]))
         }
     }
     
     ## return the result vector
-    return(correlation)
+    correlation
 }
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - -- - - 

@@ -39,9 +39,9 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
         ## row binding of files to the datas data frame
         datas <- rbind(datas, read)
     }
+    
     ## na.rm = TRUE means we remove NA values
-    ## return the mean of the pollutant from the data frame datas
-    ## pollutant here could either be "sulfate" or "nitrate"
+    ## compute the mean of the pollutant from the data frame datas
     mean(datas[ , pollutant], na.rm = TRUE)
 }
 
@@ -62,13 +62,13 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
 
 complete <- function(directory, id = 1:332) {
     
-    ## List of files to monitor from the directory, specdata
+    ## List of monitor files from the directory, specdata
     files_list <- list.files(path = directory, pattern = ".csv", full.names = TRUE)     
     
     ## Empty data frame for storing the number of completely observed cases
     complete_cases <- data.frame()
     
-    ## Loop through the list of files until the ID is found 
+    ## Loop through the list of files using the ID specified 
     for (i in id) {
         
         ## read the file of corresponding ID
@@ -81,12 +81,12 @@ complete <- function(directory, id = 1:332) {
         ## Count rows with complete cases
         nobs <- nrow(file)
         
-        ## Enumerate cases by index i
-        ## Store in complete cases dataframe
+        ## Enumerate cases by index i, which is the monitor ID
+        ## Store in complete cases dataframe the cases that are complete
         complete_cases <- rbind(complete_cases, data.frame(i, nobs))
     }
     
-    ## return the data frame
+    ## return the data frame of complete cases
     return(complete_cases)
 }
 
@@ -119,6 +119,7 @@ corr <- function(directory, threshold = 0) {
     ## Empty vector for storing values used in correlation analysis
     correlation <- vector(mode = "numeric", length = 0)
     
+    ## Looping through files
     for(i in 1:length(files_list)){
         
         ## Read the file of corresponding index
@@ -135,7 +136,6 @@ corr <- function(directory, threshold = 0) {
             ## Compute the correlation of the pollutants then store in a vector
             ## use is an attribute of cor for computing covariances in the presence of missing values. 
             correlation <- c(correlation,cor(temp$nitrate,temp$sulfate))
-            ## Since this is not a data frame we cannot use rbind or cbind
         }
     }
     
@@ -158,16 +158,15 @@ hospital <- function() {
     outcome <- read.csv('outcome-of-care-measures.csv', colClasses = "character")
     
     ## Coerce the column to be numeric
-    ## Warning about NAs are introduced because of missing values
+    ## By coercing it, warning about NAs are introduced because of missing values
     outcome[, 11] <- as.numeric(outcome[, 11])
     
     ## Plot the histogram with values from outcome[, 11]
     ## main is the attribute of main title
     ## xlab is the attribute for the x-axis label
-    ## col is the attribute for the color to be used to fiil the bars
+    ## col is the attribute for the color to be used to fill the bars
     hist(outcome[, 11],
          main = "Hospital 30-Day Death (Mortality) Rates from Heart Attack",
          xlab = "Deaths",
          col = "light blue")
-         
 }

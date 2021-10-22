@@ -34,6 +34,6 @@ Modify the code given so that you can plot the 30-day mortality rates for heart 
   head(outcome)
   outcome[, 11] <- as.numeric(outcome[, 11])
 
-  ## You may get a warning about NAs being introduced; that is okay
+  ## You may get a warning about NAs being introduced
   hist(outcome[, 11])
 ```

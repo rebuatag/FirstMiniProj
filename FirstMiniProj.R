@@ -47,7 +47,8 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
     }
     
     ## mean would compute the mean of the pollutant from the data frame datas
-    ## [[]] would return the column with specified pollutant parameter from the data frame
+    ## datas [[pollutant]] would return the data or statistics of the pollutant passed
+    ## [[]] would return the column of specified pollutant parameter from the data frame
     mean(datas[[pollutant]])
 }
 
@@ -89,8 +90,8 @@ complete <- function(directory, id = 1:332) {
         
         ## Enumerate cases by index i, which is based on the id parameter
         ## Store in complete cases dataframe the cases that are complete
-        ## data.frame creates a data frame with monitor ID and no. of complete cases
-        ## rbind binds the cases row wise
+        ## data.frame creates a data frame with elements, monitor ID and no. of complete cases
+        ## rbind binds the monitor ID and number of complete cases row wise in complete_cases
         complete_cases <- rbind(complete_cases, data.frame(i, nobs))
     }
     
@@ -137,12 +138,13 @@ corr <- function(directory, threshold = 0) {
         ## na.omit() returns the object with incomplete cases removed
         read_file <- na.omit(read_file)
         
-        ## count the no of rows of complete observation cases
+        ## Using nrows to count the no of rows of complete observation cases
         ## if it is greater than the threshold
         if(nrow(read_file) > threshold){
             
-            ## Compute the correlation of the pollutants then store in a vector
-            ## Since read_file is a data frame, we use [[]] to get the pollutants
+            ## cor computes the correlation of the pollutants then store in a vector
+            ## Since read_file is a data frame, we use [[]] to get the column of pollutants in the read_file
+            ## read_file[["sulfate or nitrate"]] gets the statistics of the specific pollutant
             correlation <- c(correlation,cor(read_file[["sulfate"]], read_file[["nitrate"]]))
         }
     }
